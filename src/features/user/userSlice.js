@@ -36,18 +36,22 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        logoutUser: (state) => {
+        logoutUser: (state, { payload }) => {
             state.user = null;
             state.isSidebarOpen = false;
             removeUserFromLocalStorage();
+
+            if (payload) {
+                toast.success(payload);
+            }
         },
-        toggleSidebar: (state) => {
+        toggleSidebar: state => {
             state.isSidebarOpen = !state.isSidebarOpen;
         },
     },
     extraReducers: builder => {
         builder
-            .addCase(registerUser.pending, (state) => {
+            .addCase(registerUser.pending, state => {
                 state.isLoading = true;
             })
             .addCase(registerUser.fulfilled, (state, { payload }) => {
@@ -61,7 +65,7 @@ const userSlice = createSlice({
                 state.isLoading = false;
                 toast.error(payload);
             })
-            .addCase(loginUser.pending, (state) => {
+            .addCase(loginUser.pending, state => {
                 state.isLoading = true;
             })
             .addCase(loginUser.fulfilled, (state, { payload }) => {
@@ -76,7 +80,7 @@ const userSlice = createSlice({
                 state.isLoading = false;
                 toast.error(payload);
             })
-            .addCase(updateUser.pending, (state) => {
+            .addCase(updateUser.pending, state => {
                 state.isLoading = true;
             })
             .addCase(updateUser.fulfilled, (state, { payload }) => {

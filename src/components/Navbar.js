@@ -17,7 +17,7 @@ export default function Navbar() {
     };
 
     function onLogoutHandler() {
-        dispatch(logoutUser());
+        dispatch(logoutUser('Logging out'));
     };
 
     return (
