@@ -1,3 +1,4 @@
+import { useState, useMemo } from 'react';
 import { FormRow, FormRowSelect } from '.';
 import Wrapper from '../assets/wrappers/SearchContainer';
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,15 +9,31 @@ export default function SearchContainer() {
         useSelector((store) => store.allJobs);
     const { jobTypeOptions, statusOptions } = useSelector((store) => store.job);
     const dispatch = useDispatch();
+    const [localSearch, setLocalSearch] = useState('');
 
     function onHandleSearch(e) {
-        if (isLoading) return;
         dispatch(handleChange({ name: e.target.name, value: e.target.value }));
     }
+
     function omHandleSubmit(e) {
         e.preventDefault();
         dispatch(clearFilters());
     }
+
+    const debounce = () => {
+        let timeoutID;
+
+        // return fn as value
+        return (e) => {
+            setLocalSearch(e.target.value);
+            clearTimeout(timeoutID);
+            timeoutID = setTimeout(() => {
+                dispatch(handleChange({ name: e.target.name, value: e.target.value }));
+            }, 1000);
+        };
+    };
+
+    const optimizedDebounce = useMemo(() => debounce(), []);
 
     return (
         <Wrapper>
@@ -26,8 +43,8 @@ export default function SearchContainer() {
                     <FormRow
                         type='text'
                         name='search'
-                        value={search}
-                        handleChange={onHandleSearch}
+                        value={localSearch}
+                        handleChange={optimizedDebounce}
                     />
                     <FormRowSelect
                         labelText='status'
