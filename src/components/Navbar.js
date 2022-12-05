@@ -2,7 +2,7 @@ import Wrapper from '../assets/wrappers/Navbar';
 import { FaAlignLeft, FaUserCircle, FaCaretDown } from 'react-icons/fa';
 import Logo from './Logo';
 import { useState } from 'react';
-
+import { clearStore } from '../features/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSidebar, logoutUser } from '../features/user/userSlice';
 
@@ -17,7 +17,7 @@ export default function Navbar() {
     };
 
     function onLogoutHandler() {
-        dispatch(logoutUser('Logging out'));
+        dispatch(clearStore('Logout Successful...'));
     };
 
     return (
